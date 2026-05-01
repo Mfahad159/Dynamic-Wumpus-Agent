@@ -55,8 +55,18 @@ body {
   flex-direction: column;
   width: 96vw;
   max-width: 1200px;
-  height: 96vh;
+  height: 96vh; /* Desktop fixed height */
   gap: 12px;
+}
+
+@media (max-width: 850px) {
+  .page-wrapper {
+    height: auto;
+    min-height: 100vh;
+    padding-bottom: 20px;
+    width: 100vw;
+    padding: 10px;
+  }
 }
 
 /* ─── Title Bar ──────────────────────────────────────────── */
@@ -110,6 +120,15 @@ body {
   min-height: 0;
 }
 
+@media (max-width: 850px) {
+  .app-container {
+    grid-template-columns: 1fr;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
 /* ─── Grid Viewport ──────────────────────────────────────── */
 .grid-viewport {
   position: relative;
@@ -122,6 +141,14 @@ body {
   border-radius: var(--radius-lg);
   overflow: auto;
   padding: 16px;
+  min-height: 400px;
+}
+
+@media (max-width: 850px) {
+  .grid-viewport {
+    min-height: 350px;
+    padding: 10px;
+  }
 }
 
 .start-msg {
@@ -205,6 +232,12 @@ body {
   scrollbar-width: none;
 }
 .side-panel::-webkit-scrollbar { display: none; }
+
+@media (max-width: 850px) {
+  .side-panel {
+    overflow-y: visible;
+  }
+}
 
 /* ─── Card ───────────────────────────────────────────────── */
 .card {
