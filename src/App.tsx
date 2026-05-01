@@ -3,6 +3,7 @@ import './index.css';
 import { Grid } from './logic/Grid';
 import { Agent } from './logic/Agent';
 import type { GridConfig, Percept } from './logic/types';
+import { Bot, Coins, Skull, Zap, Wind, Waves, Play, Square, FastForward, RotateCcw } from 'lucide-react';
 
 const App: React.FC = () => {
   const [config, setConfig] = useState<GridConfig>({ rows: 5, cols: 5, pitProbability: 0.2 });
@@ -10,8 +11,9 @@ const App: React.FC = () => {
   const [agent, setAgent] = useState<Agent | null>(null);
   const [inferenceSteps, setInferenceSteps] = useState(0);
   const [percepts, setPercepts] = useState<Percept[]>([]);
-  const [status, setStatus] = useState<'idle' | 'running' | 'won' | 'stuck'>('idle');
-  const [tick, setTick] = useState(0); // For forcing re-renders
+  const [status, setStatus] = useState<'idle' | 'running' | 'won' | 'stuck' | 'auto'>('idle');
+  const [speed, setSpeed] = useState(500);
+  const [tick, setTick] = useState(0); 
   
   console.log('App rendering, status:', status);
   
@@ -49,8 +51,13 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
+    if (status === 'auto') {
+      timerRef.current = window.setInterval(nextStep, speed);
+    } else {
+      if (timerRef.current) clearInterval(timerRef.current);
+    }
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, []);
+  }, [status, speed]);
 
   const renderCell = (r: number, c: number) => {
     if (!grid || !agent) return null;
@@ -71,12 +78,13 @@ const App: React.FC = () => {
     return (
       <div key={`${r}-${c}`} className={className}>
         <div className="percept-icon">
-          {cell.percepts.includes('Breeze') && <div className="percept-dot breeze" title="Breeze" />}
-          {cell.percepts.includes('Stench') && <div className="percept-dot stench" title="Stench" />}
+          {cell.percepts.includes('Breeze') && <Wind size={10} className="icon-breeze" />}
+          {cell.percepts.includes('Stench') && <Waves size={10} className="icon-stench" />}
         </div>
-        {status === 'won' && cell.hasGold && '💰'}
-        {(status === 'stuck' || status === 'won') && cell.hasPit && '🕳️'}
-        {(status === 'stuck' || status === 'won') && cell.hasWumpus && '👹'}
+        {isAgent && <Bot size={32} color="var(--agent-color)" className="agent-icon" />}
+        {status === 'won' && cell.hasGold && <Coins size={24} color="#fbbf24" />}
+        {(status === 'stuck' || status === 'won') && cell.hasPit && <Skull size={24} color="#ef4444" />}
+        {(status === 'stuck' || status === 'won') && cell.hasWumpus && <Zap size={24} color="#f87171" />}
       </div>
     );
   };
@@ -134,8 +142,35 @@ const App: React.FC = () => {
               style={{ width: '60px', background: 'transparent', border: '1px solid #444', color: 'white', borderRadius: '4px', padding: '2px' }}
             />
           </div>
-          <button onClick={initGame}>New Game</button>
-          <button onClick={nextStep} disabled={status !== 'running'}>Step Agent</button>
+          <button onClick={initGame} className="btn-primary">
+            <RotateCcw size={16} /> New Game
+          </button>
+          <div className="button-group">
+            <button 
+              onClick={nextStep} 
+              disabled={status !== 'running'}
+              className="btn-secondary"
+            >
+              <Play size={16} /> Step
+            </button>
+            <button 
+              onClick={() => setStatus(status === 'auto' ? 'running' : 'auto')}
+              disabled={status === 'idle' || status === 'won' || status === 'stuck'}
+              className="btn-secondary"
+            >
+              {status === 'auto' ? <><Square size={16} /> Stop</> : <><FastForward size={16} /> Auto</>}
+            </button>
+          </div>
+          <div className="stat-row">
+            <span className="stat-label">Speed (ms)</span>
+            <input 
+              type="range" 
+              min="100" 
+              max="2000" 
+              value={speed} 
+              onChange={e => setSpeed(parseInt(e.target.value))}
+            />
+          </div>
         </div>
       </div>
     </div>

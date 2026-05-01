@@ -80,11 +80,23 @@ body {
 .cell.safe { background: rgba(34, 197, 94, 0.2); border: 1px solid var(--safe-color); }
 .cell.hazard { background: rgba(239, 68, 68, 0.3); border: 1px solid var(--hazard-color); }
 
-.cell.agent::after {
-  content: '🤖';
-  font-size: 2rem;
-  z-index: 10;
+.cell.agent {
+  box-shadow: inset 0 0 15px var(--agent-color);
 }
+
+.agent-icon {
+  filter: drop-shadow(0 0 8px var(--agent-color));
+  animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.8; }
+}
+
+.icon-breeze { color: #60a5fa; }
+.icon-stench { color: #f87171; }
 
 .percept-icon {
   position: absolute;
@@ -138,7 +150,20 @@ body {
   gap: 12px;
 }
 
+.button-group {
+  display: flex;
+  gap: 8px;
+}
+
+.button-group button {
+  flex: 1;
+}
+
 button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   padding: 10px;
   border: none;
   border-radius: 8px;
