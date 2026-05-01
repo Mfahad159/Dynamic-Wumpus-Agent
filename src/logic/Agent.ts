@@ -1,6 +1,6 @@
 import { Grid } from './Grid';
 import { KnowledgeBase } from './KnowledgeBase';
-import type { Percept } from './types';
+
 
 export class Agent {
   private pos: [number, number] = [0, 0];

@@ -25,7 +25,7 @@ const App: React.FC = () => {
   const [percepts, setPercepts] = useState<Percept[]>([]);
   const [status, setStatus] = useState<'idle' | 'running' | 'won' | 'stuck' | 'auto'>('idle');
   const [speed, setSpeed] = useState(500);
-  const [tick, setTick] = useState(0);
+
   const [moves, setMoves] = useState(0);
 
   // Use refs so the auto-play interval always reads fresh values
@@ -41,7 +41,8 @@ const App: React.FC = () => {
     const [r, c] = a.getPos();
     setInferenceSteps(a.getInferenceSteps());
     setPercepts(g.getCell(r, c).percepts);
-    setTick(t => t + 1);
+    // Force re-render removed; tick state not needed
+
   }, []);
 
   const finishGame = useCallback((result: 'won' | 'stuck') => {
