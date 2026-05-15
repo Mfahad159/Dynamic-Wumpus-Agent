@@ -32,7 +32,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 
   /* Subtle radial glow backdrop */
   background-image:
